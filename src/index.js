@@ -4,7 +4,7 @@ import { errorMiddleware } from './common/error.middleware.js';
 import { bodyFormatErrorMiddleware } from './common/body-format-error.middleware.js';
 import './common/orm.config.js';
 
-const port = 3333;
+const port = process.env.PORT || 3333;
 const app = express();
 
 app.use(express.json());
