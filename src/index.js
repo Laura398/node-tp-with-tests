@@ -5,7 +5,7 @@ import { bodyFormatErrorMiddleware } from './common/body-format-error.middleware
 import './common/orm.config.js';
 
 const port = process.env.PORT || 3333;
-const app = express();
+export const app = express();
 
 app.use(express.json());
 app.use(bodyFormatErrorMiddleware);

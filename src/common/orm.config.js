@@ -11,6 +11,6 @@ export const sequelize = new Sequelize({
 sequelize.authenticate()
   .then(() => console.log('Connection to database OK'))
   .then(() => sequelize.sync({ alter: true }))
-  .then(() => console.log('Database sync OK'))
+  // .then(() => console.log('Database sync OK'))
   .catch(error => console.error('Connection to database KO', error));
 

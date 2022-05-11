@@ -8,7 +8,8 @@
     "start": "node src/index.js",
     "start:debug": "node --inspect src/index.js",
     "start:dev": "nodemon --inspect src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "test:dev": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch"
   },
   "repository": {
     "type": "git",
@@ -26,10 +27,12 @@
   },
   "dependencies": {
     "express": "^4.17.3",
+    "jest": "^28.1.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "luxon": "^2.3.1",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.17.0"
+    "sequelize": "^6.17.0",
+    "supertest": "^6.2.3"
   }
 }
