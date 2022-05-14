@@ -4,10 +4,10 @@
 ```npm install```
 
 ## Run
-```npm start```
+```nodemon```
 
-## Debug
-```npm run start:debug```
+## Tests
+```npm run test:dev```
 
-## Run dev mode
-```npm run start:dev```
+## Heroku
+```https://nodejs-tp-app.herokuapp.com/```
