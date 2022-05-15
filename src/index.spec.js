@@ -1,168 +1,236 @@
 import supertest from 'supertest';
 import { app } from './index.js';
 
-await describe('app', () => {
+describe('app', () => {
   describe('matches', () => {
-    describe('findAll', () => {
-      it('should respond with success', () => {
+    describe('GET /matches', () => {
+      it('should return 200', async () => {
         return supertest(app)
           .get('/matches')
           .then(response => {
-            expect(response).toBeTruthy();
             expect(response.status).toBe(200);
             expect(response.body).toBeInstanceOf(Array);
-            expect(typeof response.body[0]).toBe('object');
-            expect(typeof response.body[0].id).toBe('number');
-            expect(typeof response.body[0].team1).toBe('string');
-            expect(typeof response.body[0].team2).toBe('string');
-            expect(typeof response.body[0].score).toBe('string');
-            expect(typeof response.body[0].date).toBe('date');
           });
       });
-      it('should respond with bad request', () => {
-        return supertest(app)
-        .create('/matches')
-        .then(response => {
-          expect(response).toBeTruthy();
-          expect(response.status).toBe(404);
-          expect(response.body.length).toBe(1);
-        });
-      });
     });
-    describe('findById', () => {
-      it('should respond with success', () => {
+    describe('GET /matches/:id', () => {
+      it('should return 200', async () => {
         return supertest(app)
           .get('/matches/1')
-          .then(request => {
-            expect(request.params.id).toBe(1);
-          })
           .then(response => {
-            expect(response).toBeTruthy();
             expect(response.status).toBe(200);
-            expect(response.body.length).toBe(1);
-            expect(typeof response.body).toBe('object');
-            expect(typeof response.body.id).toBe('number');
-            expect(typeof response.body.team1).toBe('string');
-            expect(typeof response.body.team2).toBe('string');
-            expect(typeof response.body.score).toBe('string');
-            expect(typeof response.body.date).toBe('date');
+            expect(response.body).toBeInstanceOf(Object);
           });
       });
-      it('should respond with not found', () => {
+      it('should return 404', async () => {
         return supertest(app)
-        .get('/matches/1')
-        .then(response => {
-          expect(response).toBeTruthy();
-          expect(response.status).toBe(404);
-          expect(response.body.length).toBe(1);
-        });
-      });
-    });
-    describe('delete', () => {
-      it('should respond with success', () => {
-        return supertest(app)
-          .delete('/matches/1')
-          .then(request => {
-            expect(request.params.id).toBe(1);
-          })
+          .get('/matches/100')
           .then(response => {
-            expect(response).toBeTruthy();
-            expect(response.status).toBe(204);
-            expect(response.body.length).toBe(1);
-          });
-      });
-      it('should respond with not found', () => {
-        return supertest(app)
-          .delete('/matches/1')
-          .then(response => {
-            expect(response).toBeTruthy();
             expect(response.status).toBe(404);
-            expect(response.body.length).toBe(1);
+          });
+      });
+      it('should return 400', async () => {
+        return supertest(app)
+          .get('/matches/abc')
+          .then(response => {
+            expect(response.status).toBe(400);
           });
       });
     });
-    describe('create', () => {
-      it('should respond with success', () => {
+    describe('POST /matches', () => {
+      it('should return 201', async () => {
         return supertest(app)
-          .create('/matches')
-          .then(request => {
-            expect(typeof request.body).toBe('object');
-            expect(typeof request.body.team1).toBe('string');
-            expect(typeof request.body.team2).toBe('string');
-            expect(typeof request.body.score).toBe('string');
-            expect(typeof request.body.date).toBe('date');
+          .post('/matches')
+          .send({
+            id: 4,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
           })
           .then(response => {
-            expect(response).toBeTruthy();
             expect(response.status).toBe(201);
-            expect(response.body.length).toBe(1);
+            expect(response.body).toBeInstanceOf(Object);
           });
       });
-      it('should respond with bad request', () => {
+      it('should return 400', async () => {
         return supertest(app)
-        .create('/matches')
-        .then(response => {
-          expect(response).toBeTruthy();
-          expect(response.status).toBe(404);
-          expect(response.body.length).toBe(1);
-        });
+          .post('/matches')
+          .send({
+            id: 4,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
+          })
+          .then(response => {
+            expect(response.status).toBe(400);
+          });
       });
     });
-    describe('patch', () => {
-      it('should respond with success', () => {
+    describe('delete /matches/:id', () => {
+      it('should return 201', async () => {
+        return supertest(app)
+          .delete('/matches/1')
+          .then(response => {
+            expect(response.status).toBe(201);
+            expect(response.body).toBeInstanceOf(Object);
+          });
+      });
+      it('should return 401', async () => {
+        return supertest(app)
+          .delete('/matches/100')
+          .then(response => {
+            expect(response.status).toBe(401);
+          });
+      });
+    });
+    describe('pacth /matches/:id', () => {
+      it('should return 201', async () => {
         return supertest(app)
           .patch('/matches/1')
-          .then(request => {
-            expect(request.params.id).toBe(1);
-            expect(typeof request.body).toBe('object');
-            expect(typeof request.body.team1).toBe('string');
-            expect(typeof request.body.team2).toBe('string');
-            expect(typeof request.body.score).toBe('string');
-            expect(typeof request.body.date).toBe('date');
+          .send({
+            id: 4,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
           })
           .then(response => {
-            expect(response).toBeTruthy();
             expect(response.status).toBe(201);
-            expect(response.body.length).toBe(1);
+            expect(response.body).toBeInstanceOf(Object);
           });
       });
-      it('should respond with not found', () => {
+      it('it should return 400', async () => {
         return supertest(app)
-        .create('/matches/1')
-        .then(response => {
-          expect(response).toBeTruthy();
-          expect(response.status).toBe(404);
-          expect(response.body.length).toBe(1);
-        });
+          .patch('/matches/100')
+          .send({
+            id: 4,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
+          })
+          .then(response => {
+            expect(response.status).toBe(400);
+          });
       });
-    });
-    describe('set', () => {
-      it('should respond with success', () => {
+      it('should return 404', async () => {
+        return supertest(app)
+          .patch('/matches/100')
+          .send({
+            id: 100,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
+          })
+          .then(response => {
+            expect(response.status).toBe(404);
+          });
+      });
+      it('should return 401', async () => {
         return supertest(app)
           .patch('/matches/1')
-          .then(request => {
-            expect(request.params.id).toBe(1);
-            expect(typeof request.body).toBe('object');
-            expect(typeof request.body.team1).toBe('string');
-            expect(typeof request.body.team2).toBe('string');
-            expect(typeof request.body.score).toBe('string');
-            expect(typeof request.body.date).toBe('date');
+          .send({
+            id: 100,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
           })
           .then(response => {
-            expect(response).toBeTruthy();
-            expect(response.status).toBe(201);
-            expect(response.body.length).toBe(1);
+            expect(response.status).toBe(401);
           });
       });
-      it('should respond with not found', () => {
+      it('should return 403', async () => {
         return supertest(app)
-        .create('/matches/1')
-        .then(response => {
-          expect(response).toBeTruthy();
-          expect(response.status).toBe(404);
-          expect(response.body.length).toBe(1);
-        });
+          .patch('/matches/1')
+          .send({
+            id: 100,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
+          })
+          .then(response => {
+            expect(response.status).toBe(403);
+          });
+      });
+    });
+    describe('put /matches/:id', () => {
+      it('should return 400', async () => {
+        return supertest(app)
+          .put('/matches/1')
+          .send({
+            id: 4,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
+          })
+          .then(response => {
+            expect(response.status).toBe(400);
+            expect(response.body).toBeInstanceOf(Object);
+          });
+      });
+      it('should return 201', async () => {
+        return supertest(app)
+          .put('/matches/1')
+          .send({
+            id: 4,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
+          })
+          .then(response => {
+            expect(response.status).toBe(201);
+            expect(response.body).toBeInstanceOf(Object);
+          });
+      });
+      it('should return 404', async () => {
+        return supertest(app)
+          .put('/matches/100')
+          .send({
+            id: 100,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
+          })
+          .then(response => {
+            expect(response.status).toBe(404);
+          });
+      });
+      it('should return 400', async () => {
+        return supertest(app)
+          .put('/matches/1')
+          .send({
+            id: 4,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
+          })
+          .then(response => {
+            expect(response.status).toBe(400);
+          });
+      });
+      it('should return 403', async () => {
+        return supertest(app)
+          .put('/matches/1')
+          .send({
+            id: 4,
+            team1: "Brazil",
+            team2: "Croatia",
+            score: "2-6",
+            date: "2018-06-18T00:00:00.000Z"
+          })
+          .then(response => {
+            expect(response.status).toBe(403);
+          });
       });
     });
   });
-});
+  });
